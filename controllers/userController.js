@@ -39,7 +39,7 @@ exports.syncPayment = async (req, res) => {
         email,
         firstName,
         lastName,
-        name: name || `${firstName} ${lastName}`,
+        name:`${firstName} ${lastName}`,
         age,
         gender,
         occupation,
@@ -56,11 +56,12 @@ exports.syncPayment = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Sync successful", user });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: error.message });
   }
 };
 
-// Check Auth Status
+// Check Auth Statuz
 exports.checkAuth = async (req, res) => {
   const { email } = req.body;
 
