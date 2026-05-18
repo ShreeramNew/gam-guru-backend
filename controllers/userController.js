@@ -29,7 +29,7 @@ exports.syncPayment = async (req, res) => {
       // Optionally update profile info if it was missing
       if (!user.firstName) user.firstName = firstName;
       if (!user.lastName) user.lastName = lastName;
-      user.countryCode=countryCode;
+      user.countryCode = countryCode;
       user.timezone = timezone;
       user.startSession = startSession;
       user.endSession = endSession;
@@ -39,7 +39,7 @@ exports.syncPayment = async (req, res) => {
         email,
         firstName,
         lastName,
-        name:`${firstName} ${lastName}`,
+        name: `${firstName} ${lastName}`,
         age,
         gender,
         occupation,
@@ -56,7 +56,7 @@ exports.syncPayment = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Sync successful", user });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -65,16 +65,26 @@ exports.syncPayment = async (req, res) => {
 exports.checkAuth = async (req, res) => {
   const { email } = req.body;
 
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
   try {
-    const user = await User.findOne({ email });
+    // Using a case-insensitive regex match
+    const user = await User.findOne({
+      email: { $regex: new RegExp(`^${email.trim()}$`, "i") },
+    });
+
     if (user) {
       return res.json({
         isRegistered: true,
         accessibleModules: user.accessibleModules,
       });
     }
+
     res.json({ isRegistered: false, accessibleModules: [] });
   } catch (error) {
+    console.error("Auth check internal failure:", error);
     res.status(500).json({ error: "Auth check failed" });
   }
 };
