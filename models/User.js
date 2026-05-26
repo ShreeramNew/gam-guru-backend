@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
     endSession: String, // ADDED
     accessibleModules: [String],
     isRegistered: { type: Boolean, default: true },
+    amountPaid: Number,
   },
   { timestamps: true },
 );

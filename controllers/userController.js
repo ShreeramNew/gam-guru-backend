@@ -16,6 +16,7 @@ exports.syncPayment = async (req, res) => {
     timezone,
     startSession,
     endSession, // CAPTURE NEW DATA
+    amountPaid,
   } = req.body;
 
   try {
@@ -33,6 +34,7 @@ exports.syncPayment = async (req, res) => {
       user.timezone = timezone;
       user.startSession = startSession;
       user.endSession = endSession;
+      user.amountPaid = user.amountPaid || 0 + amountPaid;
     } else {
       // New User: Create full profile
       user = new User({
@@ -50,6 +52,7 @@ exports.syncPayment = async (req, res) => {
         countryCode,
         phone,
         accessibleModules: [moduleTitle],
+        amountPaid,
       });
     }
 
